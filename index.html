@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HLS Video Player</title>
+    <title>Streaming</title>
     <!-- Include Video.js CSS -->
     <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
     <!-- Include Video.js JS -->
@@ -11,30 +11,27 @@
     <!-- Include Videojs-contrib-hls -->
     <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js"></script>
     <style>
-      .video-js {
-        width: 100%;
-        height: 720;
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
       }
-      .vjs-default-skin .vjs-big-play-button {
-        background: black;
-        &:before {
-          background-color: black;
-        }
-        &:hover {
-          background-color: black;
-        }
+      .video-js {
+        width: 100vw;
+        height: 100vh;
       }
     </style>
   </head>
   <body>
     <video
       id="my-video"
+      autoplay
       class="video-js vjs-default-skin vjs-big-play-centered"
       controls
       playsinline
       preload="auto"
-      width="1080"
-      height="720"
       data-setup="{}"
       poster="./img/poster.webp"
     >
@@ -49,7 +46,28 @@
     </video>
 
     <script>
-      var player = videojs("my-video");
+      var player = videojs("my-video", {
+        autoplay: true,
+        muted: true,
+      });
+
+      player.ready(function () {
+        // Request fullscreen on player ready
+        var videoElement = document.getElementById("my-video");
+        if (videoElement.requestFullscreen) {
+          videoElement.requestFullscreen();
+        } else if (videoElement.mozRequestFullScreen) {
+          // Firefox
+          videoElement.mozRequestFullScreen();
+        } else if (videoElement.webkitRequestFullscreen) {
+          // Chrome, Safari and Opera
+          videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) {
+          // IE/Edge
+          videoElement.msRequestFullscreen();
+        }
+      });
+      player.play();
     </script>
   </body>
 </html>
